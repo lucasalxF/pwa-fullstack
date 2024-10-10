@@ -1,0 +1,20 @@
+{
+    "name": "lista de tarefas",
+    "short_name": "lista",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#28a745",
+    "icons": [
+        {
+            "src": "icons/iconLista.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/iconLista.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
