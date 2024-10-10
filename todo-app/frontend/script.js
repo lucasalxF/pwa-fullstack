@@ -3,12 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
 
-    const apiUrl = 'http://localhost:3000/tasks';
-
-    // Fetch and display tasks
-    const fetchTasks = async () => {
-        const response = await fetch(apiUrl);
-        const tasks = await response.json();
+    // Função para carregar tarefas do localStorage
+    const loadTasks = () => {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         taskList.innerHTML = '';
         tasks.forEach(task => {
             const li = document.createElement('li');
@@ -22,24 +19,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Add new task
-    taskForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const newTask = { id: Date.now().toString(), name: taskInput.value };
-        await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newTask)
-        });
-        taskInput.value = '';
-        fetchTasks();
-    });
-
-    // Delete task
-    const deleteTask = async (id) => {
-        await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-        fetchTasks();
+    // Função para salvar tarefas no localStorage
+    const saveTasks = (tasks) => {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     };
 
-    fetchTasks();
+    // Adicionar nova tarefa
+    taskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const newTask = { id: Date.now().toString(), name: taskInput.value };
+        tasks.push(newTask);
+        saveTasks(tasks);
+        taskInput.value = '';
+        loadTasks();
+    });
+
+    // Deletar tarefa
+    const deleteTask = (id) => {
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        tasks = tasks.filter(task => task.id !== id);
+        saveTasks(tasks);
+        loadTasks();
+    };
+
+    // Carregar tarefas ao iniciar
+    loadTasks();
 });
